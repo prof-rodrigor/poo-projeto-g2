@@ -1,4 +1,4 @@
-package br.ufpb.dcx.rodrigor.projetos.login;
+package br.ufpb.dcx.rodrigor.projetos.login.model;
 
 public class Usuario {
     private String login;

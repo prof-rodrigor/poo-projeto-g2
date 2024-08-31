@@ -1,7 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
-import br.ufpb.dcx.rodrigor.projetos.login.UsuarioService;
+import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.services.ProjetoService;
 import io.javalin.config.Key;
