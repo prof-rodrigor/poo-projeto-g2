@@ -1,13 +1,13 @@
 package br.ufpb.dcx.rodrigor.projetos.login.controller;
 
 import br.ufpb.dcx.rodrigor.projetos.Keys;
-import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.mindrot.jbcrypt.BCrypt;
 
 
 public class LoginController {
@@ -27,7 +27,7 @@ public class LoginController {
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
         Usuario usuario = usuarioService.getUsuario(login);
-        if(usuario != null && usuario.getSenha().equals(senha)){
+        if(usuario != null && BCrypt.checkpw(senha,usuario.getSenha())){
             ctx.sessionAttribute("usuario", usuario);
             logger.info("Usuário '{}' autenticado com sucesso.", login);
             ctx.redirect("/area-interna");
