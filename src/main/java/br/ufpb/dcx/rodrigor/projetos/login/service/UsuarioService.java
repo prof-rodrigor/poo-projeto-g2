@@ -3,17 +3,16 @@ package br.ufpb.dcx.rodrigor.projetos.login.service;
 import br.ufpb.dcx.rodrigor.projetos.AbstractService;
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
-import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import com.mongodb.client.model.Filters;
 
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.List;
 
 public class UsuarioService extends AbstractService {
     private static final Logger logger = LogManager.getLogger();
@@ -32,42 +31,35 @@ public class UsuarioService extends AbstractService {
         repository.insertOne(doc);
     }
 
-    public Usuario getUsuario(String login){
-        Bson filter = Filters.eq("login", login);
-        FindIterable<Document> iterable = repository.find(filter);
-        Usuario usuario = voToUser(iterable.first());
-        if (usuario.getNome() == null || usuario.getNome().isEmpty()){
-            return null;
+    public List<Usuario> listarUsuarios(){
+        List<Usuario> usuarios = new LinkedList<>();
+        for (Document doc : repository.find()){
+            usuarios.add(voToUser(doc));
         }
-        return usuario;
+        return usuarios;
+    }
+
+    public Usuario getUsuario(String username) {
+        Bson filter = Filters.eq("username", username);
+        Document doc = repository.find(filter).first();
+
+        return doc != null ? voToUser(doc) : null;
     }
 
     public Usuario voToUser(Document doc) {
         Usuario usuario = new Usuario();
-        usuario.setNome(doc.getString("nome"));
-        usuario.setLogin(doc.getString("login"));
+        usuario.setUsername(doc.getString("username"));
+        usuario.setEmail(doc.getString("email"));
         usuario.setSenha(doc.getString("senha"));
         return usuario;
     }
     public Document userToVO(Usuario usuario){
         Document vo = new Document();
-
-        vo.put("nome", usuario.getNome());
-        vo.put("login", usuario.getLogin());
+        vo.put("username", usuario.getUsername());
+        vo.put("email", usuario.getEmail());
         vo.put("senha", usuario.getSenha());
         return vo;
     }
-
-
-    // Implementar chacagem
-//    private void checkUser(Usuario usuario) throws InvalidPasswordException, InvalidUsernameException, DatabaseException, AuthenticationException, UsernameAlreadyExistsException, InvalidEmailException, AuthorizationException {
-//    if(test == 1) throw new UsernameAlreadyExistsException();
-//    if(test == 2) throw new InvalidEmailException();
-//    if(test == 3) throw new InvalidPasswordException();
-//    if(test == 4) throw new InvalidUsernameException() ;
-//    if(test == 5) throw new AuthorizationException();
-//    }
-
 
 }
 

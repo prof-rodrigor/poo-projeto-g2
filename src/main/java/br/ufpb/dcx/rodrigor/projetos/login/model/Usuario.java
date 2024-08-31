@@ -1,33 +1,36 @@
 package br.ufpb.dcx.rodrigor.projetos.login.model;
 
+import java.util.UUID;
+
 public class Usuario {
-    private String login;
-    private String nome;
+    private String username;
+    private String email;
     private String senha;
 
-    public Usuario(String login, String nome, String senha) {
-        this.login = login;
-        this.nome = nome;
+    public Usuario(String username, String email, String senha) {
+        this.username = username;
+        this.email = email;
         this.senha = senha;
     }
 
     public Usuario() {
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getNome() {
-        return nome;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSenha() {

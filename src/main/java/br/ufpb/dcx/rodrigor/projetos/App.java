@@ -1,6 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.CadastroController;
 import br.ufpb.dcx.rodrigor.projetos.login.controller.LoginController;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import br.ufpb.dcx.rodrigor.projetos.participante.controllers.ParticipanteController;
@@ -140,6 +141,11 @@ public class App {
     }
 
     private void configurarRotas(Javalin app) {
+        CadastroController cadastroController = new CadastroController();
+        app.get("/cadastro",cadastroController::rederizarCasdastro);
+        app.post("/cadastro",cadastroController::cadastrarUsuario);
+
+
         LoginController loginController = new LoginController();
         app.get("/", ctx -> ctx.redirect("/login"));
         app.get("/login", loginController::mostrarPaginaLogin);

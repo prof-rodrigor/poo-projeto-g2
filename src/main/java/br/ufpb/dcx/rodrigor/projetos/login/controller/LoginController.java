@@ -1,6 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.login.controller;
 
 import br.ufpb.dcx.rodrigor.projetos.Keys;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
@@ -23,7 +24,6 @@ public class LoginController {
 
     public void processarLogin(Context ctx) {
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
-        //usuarioService.cadastrarNovoUsuario(new Usuario("admin","admin","admin"));
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
         Usuario usuario = usuarioService.getUsuario(login);
@@ -42,11 +42,3 @@ public class LoginController {
         ctx.redirect("/login");
     }
 }
-
-
-//    private static void login(Context ctx) {
-//        if (user != null && BCrypt.checkpw(password, user.getPasswordHash())) {
-//            String token = generateToken(user.getId());
-//            ctx.result(token);
-//        }
-//    }
