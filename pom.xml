@@ -65,6 +65,11 @@
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.kmehrunes</groupId>
+      <artifactId>javalin-jwt</artifactId>
+      <version>0.7.0</version>
+    </dependency>
   </dependencies>
 
   <build>
