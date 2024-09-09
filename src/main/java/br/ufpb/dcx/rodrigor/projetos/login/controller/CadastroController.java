@@ -7,10 +7,13 @@ import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class CadastroController {
 
+    private static final Logger logger = LogManager.getLogger();
     public void rederizarCasdastro(Context ctx){
         ctx.render("registro/registro.html");
     }
@@ -31,13 +34,13 @@ public class CadastroController {
         if (isValidUsername(username) && isValidEmail(email) && isValidPassword(password)) {
             try {
                 service.cadastrarNovoUsuario(usuario);
-                System.out.println("Usuário "+ usuario.getUsername()+" cadastrado com sucesso");
+                //System.out.println("\"Usuário \"+ usuario.getUsername()+\" cadastrado com sucesso\"");
                 ctx.redirect("/login");
             } catch (InvalidEmailException IAE) {
-                System.out.println(IAE.getMessage());
+                //System.out.println(IAE.getMessage());
                 ctx.redirect("/cadastro");
             } catch (InvalidUsernameException IUE) {
-                System.out.println(IUE.getMessage());
+                //System.out.println(IUE.getMessage());
                 ctx.redirect("/cadastro");
             }
         } else {
@@ -48,19 +51,30 @@ public class CadastroController {
 
 
     public boolean isValidUsername(String username) {
-        return username != null && username.length() <= 12 && !username.contains(" ") && !containsSinal(username);
+        return username != null && username.length() <= 12 && !username.contains(" ") && containsSinal(username);
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 45;
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") ;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && containsSinal(password);
+        return password != null && !password.trim().isEmpty() && password.length() <= 20;
     }
 
-    public boolean containsSinal(String verify){
-        for (int i = 0; i< verify.length(); i++){}
+    public boolean containsSinal(String verify) {
+        for (int i = 0; i < verify.length(); i++) {
+            char verifica = verify.charAt(i);
+            // 2A@
+            if (!Character.isAlphabetic(verifica) && !Character.isDigit(verifica))
+                return false;
+        }
+        System.out.println(verify);
         return true;
     }
+
+    // 2 -> alfabetico ? não = Sim -> 2 é digito? sim = não  ----- > (Sim e Não ) = não
+    // A --> Alfabetico ? Sim = não -> A é número? não = sim -----> (Não e Sim) = não
+    // @ --> Alfabeitico ? não = Sim -> @ É número? não = Sim ----> (Sim e Sim) = Sim --> false,
+
 
 
 
