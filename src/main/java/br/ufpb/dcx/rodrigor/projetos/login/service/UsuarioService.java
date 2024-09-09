@@ -29,6 +29,7 @@ public class UsuarioService extends AbstractService {
         this.repository = database.getCollection("usuarios");
     }
 
+    // TODO
     public void cadastrarNovoUsuario(Usuario usuario) throws InvalidUsernameException, InvalidEmailException {
         Document doc = userToVO(usuario);
 

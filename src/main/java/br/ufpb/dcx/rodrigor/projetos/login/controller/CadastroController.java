@@ -61,6 +61,16 @@ public class CadastroController {
 
 }
 
+// TODO
+/*
+ * isValidUsername() : Validar username
+ * isValidEmail(): Validar email
+ * isValidPassword(): Validar senha
+ * Implementar a telinha de erro, tipo, na hora de criar aparecer que nome,senha ou email foi no formato inválido ou já existe
+ * Botão de redirecionar para tela de login pelo botão da tela de login em cadastro
+ * Implementar JWT
+ */
+
 //       TODO implementar exceptions
 //        catch(UsernameAlreadyExistsException UAEE){
 //            //
