@@ -1,6 +1,9 @@
 package br.ufpb.dcx.rodrigor.projetos.login.controller;
 
 import br.ufpb.dcx.rodrigor.projetos.Keys;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidEmailException;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidPasswordException;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
@@ -19,24 +22,42 @@ public class CadastroController {
         String password = ctx.formParam("senha");
         String hashedPassword = BCrypt.hashpw(password,BCrypt.gensalt(12));
 
+
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
         usuario.setEmail(email);
         usuario.setSenha(hashedPassword);
 
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("password: " + password);
-        System.out.println("hashedpassword: " + hashedPassword);
-
-        try{
-            service.cadastrarNovoUsuario(usuario);
-            System.out.println("ttt");
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        if (isValidUsername(username) && isValidEmail(email) && isValidPassword(password)) {
+            try {
+                service.cadastrarNovoUsuario(usuario);
+                System.out.println("Usuário "+ usuario.getUsername()+" cadastrado com sucesso");
+                ctx.redirect("/login");
+            } catch (InvalidEmailException IAE) {
+                System.out.println(IAE.getMessage());
+                ctx.redirect("/cadastro");
+            } catch (InvalidUsernameException IUE) {
+                System.out.println(IUE.getMessage());
+                ctx.redirect("/cadastro");
+            }
+        } else {
+            ctx.redirect("/cadastro");
         }
-        ctx.redirect("/login");
     }
+
+
+
+    public boolean isValidUsername(String username) {
+        return username != null && username.length() <= 12 && !username.contains(" ");
+    }
+    public boolean isValidEmail(String email) {
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".");
+    }
+    public boolean isValidPassword(String password) {
+        return password != null && !password.trim().isEmpty();
+    }
+
+
 
 }
 

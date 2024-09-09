@@ -2,17 +2,21 @@ package br.ufpb.dcx.rodrigor.projetos.login.service;
 
 import br.ufpb.dcx.rodrigor.projetos.AbstractService;
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidEmailException;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class UsuarioService extends AbstractService {
     private static final Logger logger = LogManager.getLogger();
@@ -25,10 +29,22 @@ public class UsuarioService extends AbstractService {
         this.repository = database.getCollection("usuarios");
     }
 
-
-    public void cadastrarNovoUsuario(Usuario usuario){
+    public void cadastrarNovoUsuario(Usuario usuario) throws InvalidUsernameException, InvalidEmailException {
         Document doc = userToVO(usuario);
+
+        if (getUsuario(usuario.getUsername()) != null) {
+            throw new InvalidUsernameException("Esse usuário já existe");
+        }
+
+        if (getUsuarioByEmail(usuario.getEmail()) != null) {
+            throw new InvalidEmailException("Esse email já foi cadastrado");
+        }
+
         repository.insertOne(doc);
+    }
+
+    public void removerUsuario(String titulo){
+        repository.deleteOne(eq("titulo", new ObjectId(titulo)));
     }
 
     public List<Usuario> listarUsuarios(){
@@ -40,10 +56,21 @@ public class UsuarioService extends AbstractService {
     }
 
     public Usuario getUsuario(String username) {
-        Bson filter = Filters.eq("username", username);
+        Bson filter = eq("username", username);
         Document doc = repository.find(filter).first();
+        if (doc == null) {
+            return null;
+        }
+        return voToUser(doc);
+    }
 
-        return doc != null ? voToUser(doc) : null;
+    public Usuario getUsuarioByEmail(String email) {
+        Bson filter = eq("email", email);
+        Document doc = repository.find(filter).first();
+        if (doc == null) {
+            return null;
+        }
+        return voToUser(doc);
     }
 
     public Usuario voToUser(Document doc) {
