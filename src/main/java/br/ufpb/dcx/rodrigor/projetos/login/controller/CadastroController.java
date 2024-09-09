@@ -48,13 +48,13 @@ public class CadastroController {
 
 
     public boolean isValidUsername(String username) {
-        return username != null && username.length() <= 12 && !username.contains(" ") && containsSinal(username);
+        return username != null && username.length() <= 12 && !username.contains(" ") && !containsSinal(username);
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 45 && containsSinal(email);
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 45;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20;
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && containsSinal(password);
     }
 
     public boolean containsSinal(String verify){
