@@ -54,7 +54,7 @@ public class CadastroController {
         return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 45 && containsSinal(email);
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && containsSinal(password);
+        return password != null && !password.trim().isEmpty() && password.length() <= 20;
     }
 
     public boolean containsSinal(String verify){
