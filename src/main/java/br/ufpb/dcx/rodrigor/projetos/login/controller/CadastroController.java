@@ -35,15 +35,12 @@ public class CadastroController {
             try {
                 service.cadastrarNovoUsuario(usuario);
                 logger.info("Usuário {} cadastrado com sucesso", usuario);
-                //System.out.println("\"Usuário \"+ usuario.getUsername()+\" cadastrado com sucesso\"");
                 ctx.redirect("/login");
-            } catch (InvalidEmailException IAE) {
-                logger.error(IAE);
-                //System.out.println(IAE.getMessage());
+            } catch (InvalidEmailException iae) {
+                logger.error(iae);
                 ctx.redirect("/cadastro");
-            } catch (InvalidUsernameException IUE) {
-                logger.error((IUE));
-                //System.out.println(IUE.getMessage());
+            } catch (InvalidUsernameException iue) {
+                logger.error((iue));
                 ctx.redirect("/cadastro");
             }
         } else {
