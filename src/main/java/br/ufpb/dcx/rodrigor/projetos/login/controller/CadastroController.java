@@ -34,13 +34,10 @@ public class CadastroController {
         if (isValidUsername(username) && isValidEmail(email) && isValidPassword(password)) {
             try {
                 service.cadastrarNovoUsuario(usuario);
-                //System.out.println("\"Usuário \"+ usuario.getUsername()+\" cadastrado com sucesso\"");
                 ctx.redirect("/login");
             } catch (InvalidEmailException IAE) {
-                //System.out.println(IAE.getMessage());
                 ctx.redirect("/cadastro");
             } catch (InvalidUsernameException IUE) {
-                //System.out.println(IUE.getMessage());
                 ctx.redirect("/cadastro");
             }
         } else {
@@ -51,13 +48,13 @@ public class CadastroController {
 
 
     public boolean isValidUsername(String username) {
-        return username != null && username.length() <= 12 && !username.contains(" ") && containsSinal(username);
+        return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") ;
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 20;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20;
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ");
     }
 
     public boolean containsSinal(String verify) {
@@ -70,35 +67,5 @@ public class CadastroController {
         System.out.println(verify);
         return true;
     }
-
-    // 2 -> alfabetico ? não = Sim -> 2 é digito? sim = não  ----- > (Sim e Não ) = não
-    // A --> Alfabetico ? Sim = não -> A é número? não = sim -----> (Não e Sim) = não
-    // @ --> Alfabeitico ? não = Sim -> @ É número? não = Sim ----> (Sim e Sim) = Sim --> false,
-
-
-//dsadsad
-
 }
 
-// TODO
-/*
- * isValidUsername() : Validar username
- * isValidEmail(): Validar email
- * isValidPassword(): Validar senha
- * Implementar a telinha de erro, tipo, na hora de criar aparecer que nome,senha ou email foi no formato inválido ou já existe
- * Botão de redirecionar para tela de login pelo botão da tela de login em cadastro
- * Implementar JWT
- */
-
-//       TODO implementar exceptions
-//        catch(UsernameAlreadyExistsException UAEE){
-//            //
-//        }catch (InvalidEmailException IAE){
-//            //
-//        }catch (InvalidPasswordException IPE){
-//            //
-//        }catch (InvalidUsernameException IUE){
-//            //
-//        }catch (AuthorizationException AE){
-//            // Se o usuário não tiver permissão para cadastrar um usuário (por exemplo, se o usuário não for administrador), você deve lançar essa exceção.
-//        }
