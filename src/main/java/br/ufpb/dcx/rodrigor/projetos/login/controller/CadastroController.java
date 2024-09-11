@@ -47,7 +47,7 @@ public class CadastroController {
             } else if (!isValidEmail(email)) {
                 ctx.attribute("errorMessage", "Email inválido.");
             } else if (!isValidPassword(password)) {
-                ctx.attribute("errorMessage", "Senha inválida. Deve ter até 20 caracteres e não pode conter espaços.");
+                ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres e não pode conter espaços.");
             }
             ctx.render("registro/registro.html");
         }
