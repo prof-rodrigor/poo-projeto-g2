@@ -61,10 +61,10 @@ public class CadastroController {
         return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 20;
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 64;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ");
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ") && password.length()>= 4;
     }
 
     public boolean containsSinal(String verify) {
