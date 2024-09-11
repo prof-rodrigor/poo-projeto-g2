@@ -18,13 +18,12 @@ public class CadastroController {
         ctx.render("registro/registro.html");
     }
 
-    public void cadastrarUsuario(Context ctx){
+    public void cadastrarUsuario(Context ctx) {
         UsuarioService service = ctx.appData(Keys.USUARIO_SERVICE.key());
         String username = ctx.formParam("nome");
         String email = ctx.formParam("email");
         String password = ctx.formParam("senha");
-        String hashedPassword = BCrypt.hashpw(password,BCrypt.gensalt(12));
-
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
@@ -36,14 +35,25 @@ public class CadastroController {
                 service.cadastrarNovoUsuario(usuario);
                 ctx.redirect("/login");
             } catch (InvalidEmailException IAE) {
-                ctx.redirect("/cadastro");
+                ctx.attribute("errorMessage", "Este email já foi cadastrado.");
+                ctx.render("registro/registro.html");
             } catch (InvalidUsernameException IUE) {
-                ctx.redirect("/cadastro");
+                ctx.attribute("errorMessage", "Este nome de usuário já existe ou é inválido.");
+                ctx.render("registro/registro.html");
             }
         } else {
-            ctx.redirect("/cadastro");
+            if (!isValidUsername(username)) {
+                ctx.attribute("errorMessage", "Nome de usuário inválido.");
+            } else if (!isValidEmail(email)) {
+                ctx.attribute("errorMessage", "Email inválido.");
+            } else if (!isValidPassword(password)) {
+                ctx.attribute("errorMessage", "Senha inválida. Deve ter até 20 caracteres e não pode conter espaços.");
+            }
+            ctx.render("registro/registro.html");
         }
     }
+
+
 
 
 
