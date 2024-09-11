@@ -34,10 +34,10 @@ public class CadastroController {
             try {
                 service.cadastrarNovoUsuario(usuario);
                 ctx.redirect("/login");
-            } catch (InvalidEmailException IAE) {
+            } catch (InvalidEmailException iae) {
                 ctx.attribute("errorMessage", "Este email já foi cadastrado.");
                 ctx.render("registro/registro.html");
-            } catch (InvalidUsernameException IUE) {
+            } catch (InvalidUsernameException iue) {
                 ctx.attribute("errorMessage", "Este nome de usuário já existe ou é inválido.");
                 ctx.render("registro/registro.html");
             }
