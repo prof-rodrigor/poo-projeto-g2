@@ -9,6 +9,8 @@ import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.controllers.ProjetoController;
 import br.ufpb.dcx.rodrigor.projetos.projeto.services.ProjetoService;
 import br.ufpb.dcx.rodrigor.projetos.login.controller.RecuperacaoSenhaController;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.staticfiles.Location;
@@ -152,6 +154,8 @@ public class App {
         app.get("/login", loginController::mostrarPaginaLogin);
         app.post("/login", loginController::processarLogin);
         app.get("/logout", loginController::logout);
+
+
         RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
         app.get("/recuperarSenha", recuperarSenhaController::exibirFormularioRecuperacaoSenha);
         app.post("/recuperarSenha", recuperarSenhaController::enviarEmailRecuperacaoSenha);

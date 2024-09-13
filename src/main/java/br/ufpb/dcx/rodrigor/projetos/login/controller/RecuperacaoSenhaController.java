@@ -38,7 +38,7 @@ public class RecuperacaoSenhaController {
         return java.util.UUID.randomUUID().toString(); // Simples token UUID, mas você pode usar JWT ou algo mais seguro
     }
 
-    // Método fictício para simular envio de e-mail
+    // Metodo fictício para simular envio de e-mail
     private void enviarEmail(String email, String linkRecuperacao) {
         System.out.println("Enviando e-mail para " + email + " com o link: " + linkRecuperacao);
         // Aqui estaria a lógica real para envio de e-mails
