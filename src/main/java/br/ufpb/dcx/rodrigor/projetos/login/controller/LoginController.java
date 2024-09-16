@@ -29,7 +29,7 @@ public class LoginController {
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
-        Usuario usuario = usuarioService.getUsuario(login);
+        Usuario usuario = usuarioService.getUsuarioByEmail(login);
         if(usuario != null && BCrypt.checkpw(senha,usuario.getSenha())){
             ctx.sessionAttribute("usuario", usuario);
             logger.info("Usuário '{}' autenticado com sucesso.", login);
@@ -51,8 +51,8 @@ public class LoginController {
         Map<String, String> jsonMap = ctx.bodyAsClass(Map.class);
         String login = jsonMap.get("login");
         String senha = jsonMap.get("senha");
-        if ( usuarioService.getUsuario(login) != null){
-             Usuario usuario = usuarioService.getUsuario(login);
+        if ( usuarioService.getUsuarioByEmail(login) != null){
+             Usuario usuario = usuarioService.getUsuarioByEmail(login);
             if(BCrypt.checkpw(senha,usuario.getSenha())){
                 Map<String, String> userResponse = new HashMap<>();
                 userResponse.put("username", usuario.getUsername());
