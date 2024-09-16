@@ -34,37 +34,61 @@ public class CadastroController {
             try {
                 service.cadastrarNovoUsuario(usuario);
                 ctx.redirect("/login");
-            } catch (InvalidEmailException IAE) {
+            } catch (InvalidEmailException iae) {
                 ctx.attribute("errorMessage", "Este email já foi cadastrado.");
                 ctx.render("registro/registro.html");
-            } catch (InvalidUsernameException IUE) {
+            } catch (InvalidUsernameException iue) {
                 ctx.attribute("errorMessage", "Este nome de usuário já existe ou é inválido.");
                 ctx.render("registro/registro.html");
             }
         } else {
             if (!isValidUsername(username)) {
-                ctx.attribute("errorMessage", "Nome de usuário inválido.");
+                if(username.isEmpty() || username.equals(null)){
+                    ctx.attribute("errorMessage", "Nome de usuario não pode ser nulo");
+                } else if (username.contains(" ")) {
+                    ctx.attribute("errorMessage", "Nome de usuario não pode conter espaços");//OK
+                }else if (username.matches(".[!@#$%^&()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")){
+                    ctx.attribute("errorMessage", "Nome de usuario não pode conter caracteres especiais"); //OK
+                }else{
+                    ctx.attribute("errorMessage", "Nome de usuário inválido.");
+                }
             } else if (!isValidEmail(email)) {
                 ctx.attribute("errorMessage", "Email inválido.");
             } else if (!isValidPassword(password)) {
-                ctx.attribute("errorMessage", "Senha inválida. Deve ter até 20 caracteres e não pode conter espaços.");
+                if(!password.contains(".[!@#$%^&()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")){
+                    ctx.attribute("errorMessage", "Sua senha deve conter algum caractere especial: !, @, #, $, %, entre outros");
+                } else if (isUpperCase(password)) {
+                    ctx.attribute("errorMessage", "Sua senha deve conter alguma letra MAIUSCULA");
+                } else if (password.length() > 20 || password.length() < 4) {
+                    ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres e não pode conter espaços.");
+                }else if(password != null || password.isEmpty()){
+                    ctx.attribute("errorMessage", "Senha inválida. Sua senha não pode ser vazia.");
+                } else if (!password.trim().isEmpty()) {
+                    ctx.attribute("errorMessage", "Senha inválida. Sua senha não deve conter espaços.");
+                }
+
             }
             ctx.render("registro/registro.html");
         }
     }
 
 
-
-
-
     public boolean isValidUsername(String username) {
-        return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+        return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".[!@#$%^&()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 20;
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 64;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ");
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ") && password.length()>= 4;
+    }
+    public boolean isUpperCase(String password){
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean containsSinal(String verify) {
@@ -78,4 +102,3 @@ public class CadastroController {
         return true;
     }
 }
-
