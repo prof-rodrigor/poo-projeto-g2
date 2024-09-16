@@ -47,18 +47,7 @@ public class CadastroController {
             } else if (!isValidEmail(email)) {
                 ctx.attribute("errorMessage", "Email inválido.");
             } else if (!isValidPassword(password)) {
-               if(!password.contains(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")){
-                   ctx.attribute("errorMessage", "Sua senha deve conter algum caractere especial: !, @, #, $, %, entre outros");
-               } else if (isUpperCase(password)) {
-                   ctx.attribute("errorMessage", "Sua senha deve conter alguma letra MAIUSCULA");
-               } else if (password.length() > 20 || password.length() < 4) {
-                   ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres e não pode conter espaços.");
-               }else if(password != null || password.isEmpty()){
-                   ctx.attribute("errorMessage", "Senha inválida. Sua senha não pode ser vazia.");
-               } else if (!password.trim().isEmpty()) {
-                   ctx.attribute("errorMessage", "Senha inválida. Sua senha não deve conter espaços.");
-               }
-
+                ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres e não pode conter espaços.");
             }
             ctx.render("registro/registro.html");
         }
