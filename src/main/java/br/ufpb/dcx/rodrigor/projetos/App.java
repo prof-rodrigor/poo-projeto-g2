@@ -151,6 +151,7 @@ public class App {
         app.get("/login", loginController::mostrarPaginaLogin);
         app.post("/login", loginController::processarLogin);
         app.get("/logout", loginController::logout);
+        app.post("/v1/autenticar",loginController::autenticar);
 
         app.get("/area-interna", ctx -> {
             if (ctx.sessionAttribute("usuario") == null) {
