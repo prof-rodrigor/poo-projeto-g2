@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.PerfilController;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,6 +142,11 @@ public class App {
     }
 
     private void configurarRotas(Javalin app) {
+
+        PerfilController perfilController = new PerfilController();
+        app.get("/perfil/editar", ctx -> perfilController.mostrarPaginaEditarPerfil(ctx));
+        app.post("/perfil/editar", ctx -> perfilController.editarPerfil(ctx));
+
         CadastroController cadastroController = new CadastroController();
         app.get("/cadastro",cadastroController::rederizarCasdastro);
         app.post("/cadastro",cadastroController::cadastrarUsuario);
@@ -198,4 +204,7 @@ public class App {
             System.exit(1);
         }
     }
+
+
+
 }
