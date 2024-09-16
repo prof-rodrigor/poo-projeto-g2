@@ -18,13 +18,12 @@ public class CadastroController {
         ctx.render("registro/registro.html");
     }
 
-    public void cadastrarUsuario(Context ctx){
+    public void cadastrarUsuario(Context ctx) {
         UsuarioService service = ctx.appData(Keys.USUARIO_SERVICE.key());
         String username = ctx.formParam("nome");
         String email = ctx.formParam("email");
         String password = ctx.formParam("senha");
-        String hashedPassword = BCrypt.hashpw(password,BCrypt.gensalt(12));
-
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         Usuario usuario = new Usuario();
         usuario.setUsername(username);
@@ -35,15 +34,26 @@ public class CadastroController {
             try {
                 service.cadastrarNovoUsuario(usuario);
                 ctx.redirect("/login");
-            } catch (InvalidEmailException IAE) {
-                ctx.redirect("/cadastro");
-            } catch (InvalidUsernameException IUE) {
-                ctx.redirect("/cadastro");
+            } catch (InvalidEmailException iae) {
+                ctx.attribute("errorMessage", "Este email já foi cadastrado.");
+                ctx.render("registro/registro.html");
+            } catch (InvalidUsernameException iue) {
+                ctx.attribute("errorMessage", "Este nome de usuário já existe ou é inválido.");
+                ctx.render("registro/registro.html");
             }
         } else {
-            ctx.redirect("/cadastro");
+            if (!isValidUsername(username)) {
+                ctx.attribute("errorMessage", "Nome de usuário inválido.");
+            } else if (!isValidEmail(email)) {
+                ctx.attribute("errorMessage", "Email inválido.");
+            } else if (!isValidPassword(password)) {
+                ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres e não pode conter espaços.");
+            }
+            ctx.render("registro/registro.html");
         }
     }
+
+
 
 
 
@@ -51,10 +61,10 @@ public class CadastroController {
         return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
     }
     public boolean isValidEmail(String email) {
-        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 20;
+        return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 64;
     }
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ");
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && !password.contains(" ") && password.length()>= 4;
     }
 
     public boolean containsSinal(String verify) {
