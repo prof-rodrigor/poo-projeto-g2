@@ -158,6 +158,7 @@ public class App {
         app.get("/login", loginController::mostrarPaginaLogin);
         app.post("/login", loginController::processarLogin);
         app.get("/logout", loginController::logout);
+        app.post("/v1/autenticar",loginController::autenticar);
 
 
         RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
