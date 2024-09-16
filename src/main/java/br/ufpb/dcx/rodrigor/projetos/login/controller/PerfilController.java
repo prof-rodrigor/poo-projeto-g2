@@ -43,17 +43,15 @@ public class PerfilController {
 
         // Obtendo os parâmetros do formulário
         String nome = ctx.formParam("nome");
-        String email = ctx.formParam("email");
         String password = ctx.formParam("senha");
 
         // Log para verificar os dados recebidos
-        logger.info("Dados recebidos - Nome: {}, Email: {}, Senha: {}", nome, email, password);
+        logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         // Atualizando os dados do usuário
         usuario.setUsername(nome);
-        usuario.setEmail(email);
         usuario.setSenha(hashedPassword);
 
         // Atualizando no banco de dados
