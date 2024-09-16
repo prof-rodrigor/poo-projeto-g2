@@ -41,4 +41,5 @@ public class LoginController {
         ctx.sessionAttribute("usuario", null);
         ctx.redirect("/login");
     }
+
 }

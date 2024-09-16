@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  lang="pt-br" th:fragment="layout (title,content)">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br" th:fragment="layout (title,content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/flatly/bootstrap.min.css" rel="stylesheet">
-     <title th:replace="${title}">Titulo</title>
+    <title th:replace="${title}">Titulo</title>
 </head>
 <body>
 
-<!-- top bar-->
+<!-- top bar -->
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sistema de Projetos</a>
@@ -22,6 +22,7 @@
                         Perfil
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/perfil/editar">Editar Perfil</a></li>
                         <li><a class="dropdown-item" href="/logout">Sair</a></li>
                     </ul>
                 </li>

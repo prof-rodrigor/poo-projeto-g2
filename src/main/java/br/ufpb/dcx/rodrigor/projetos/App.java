@@ -9,8 +9,7 @@ import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.controllers.ProjetoController;
 import br.ufpb.dcx.rodrigor.projetos.projeto.services.ProjetoService;
 import br.ufpb.dcx.rodrigor.projetos.login.controller.RecuperacaoSenhaController;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.PerfilController;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.staticfiles.Location;
@@ -144,6 +143,11 @@ public class App {
     }
 
     private void configurarRotas(Javalin app) {
+
+        PerfilController perfilController = new PerfilController();
+        app.get("/perfil/editar", ctx -> perfilController.mostrarPaginaEditarPerfil(ctx));
+        app.post("/perfil/editar", ctx -> perfilController.editarPerfil(ctx));
+
         CadastroController cadastroController = new CadastroController();
         app.get("/cadastro",cadastroController::rederizarCasdastro);
         app.post("/cadastro",cadastroController::cadastrarUsuario);
