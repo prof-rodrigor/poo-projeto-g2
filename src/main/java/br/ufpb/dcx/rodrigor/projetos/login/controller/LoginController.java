@@ -27,10 +27,11 @@ public class LoginController {
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
         Usuario usuario = usuarioService.getUsuario(login);
-        if(usuario != null && BCrypt.checkpw(senha,usuario.getSenha())){
-            ctx.sessionAttribute("usuario", usuario);
-            logger.info("Usuário '{}' autenticado com sucesso.", login);
-            ctx.redirect("/area-interna");
+            if(usuario != null && BCrypt.checkpw(senha,usuario.getSenha())){
+                ctx.sessionAttribute("userEmail", usuario.getEmail());
+                ctx.sessionAttribute("usuario", usuario);
+                logger.info("Usuário '{}' autenticado com sucesso.", login);
+                ctx.redirect("/area-interna");
         }else {
             logger.warn("Tentativa de login falhou para o usuário: {}", login);
             ctx.redirect("/login");

@@ -89,30 +89,11 @@ public class UsuarioService extends AbstractService {
         return vo;
     }
     public void atualizarUsuario(Usuario usuario) {
-        // Filtrar o usuário pelo username, que é único
-        Bson filter = eq("username", usuario.getUsername());
+        Document userDoc = userToVO(usuario);
+        String email = userDoc.getString("email");
 
-        // Criar o documento atualizado com os novos valores
-        Document updatedDocument = new Document();
-        updatedDocument.put("username", usuario.getUsername());
-        updatedDocument.put("email", usuario.getEmail());
-        updatedDocument.put("senha", usuario.getSenha());
-
-        // Criar a atualização no formato necessário para o MongoDB
-        Bson updateOperation = new Document("$set", updatedDocument);
-
-        // Executar a atualização no banco de dados e verificar o resultado
-        var result = repository.updateOne(filter, updateOperation);
-
-        if (result.getMatchedCount() > 0) {
-            logger.info("Usuário '{}' atualizado com sucesso", usuario.getUsername());
-        } else {
-            logger.warn("Nenhum usuário encontrado para o username '{}'", usuario.getUsername());
-        }
+        repository.replaceOne(eq("email", email), userDoc);
     }
-
-
-
 
 }
 
