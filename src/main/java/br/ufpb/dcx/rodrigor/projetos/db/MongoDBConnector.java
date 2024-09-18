@@ -12,6 +12,7 @@ public class MongoDBConnector {
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(MongoDBConnector.class);
     private final MongoClient mongoClient;
 
+
     public MongoDBConnector(String connectionString) {
         this.mongoClient = MongoClients.create(connectionString);
     }

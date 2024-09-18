@@ -8,6 +8,8 @@ import br.ufpb.dcx.rodrigor.projetos.participante.controllers.ParticipanteContro
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.controllers.ProjetoController;
 import br.ufpb.dcx.rodrigor.projetos.projeto.services.ProjetoService;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.RecuperacaoSenhaController;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.PerfilController;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.staticfiles.Location;
@@ -141,6 +143,11 @@ public class App {
     }
 
     private void configurarRotas(Javalin app) {
+
+        PerfilController perfilController = new PerfilController();
+        app.get("/perfil/editar", ctx -> perfilController.mostrarPaginaEditarPerfil(ctx));
+        app.post("/perfil/editar", ctx -> perfilController.editarPerfil(ctx));
+
         CadastroController cadastroController = new CadastroController();
         app.get("/cadastro",cadastroController::rederizarCasdastro);
         app.post("/cadastro",cadastroController::cadastrarUsuario);
@@ -151,6 +158,13 @@ public class App {
         app.get("/login", loginController::mostrarPaginaLogin);
         app.post("/login", loginController::processarLogin);
         app.get("/logout", loginController::logout);
+        app.post("/v1/autenticar",loginController::autenticar);
+
+
+        RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
+        app.get("/recuperarSenha", recuperarSenhaController::exibirFormularioRecuperacaoSenha);
+        app.post("/recuperarSenha", recuperarSenhaController::enviarEmailRecuperacaoSenha);
+
 
         app.get("/area-interna", ctx -> {
             if (ctx.sessionAttribute("usuario") == null) {

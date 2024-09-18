@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div class="row w-100">
+        <!-- Left Side -->
+        <div class="col-md-6 left-side text-white text-center p-5">
+            <div class="mb-5">
+                <h2>Editar Perfil</h2>
+                <img src="https://via.placeholder.com/150" alt="Logo" class="img-fluid mb-3">
+            </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="col-md-6 right-side p-5">
+            <h3 class="mb-4">Editar Perfil</h3>
+
+            <!-- Mensagem de erro -->
+            <div th:if="${erro}" class="alert alert-danger" role="alert">
+                <span th:text="${erro}"></span>
+            </div>
+
+            <form action="/perfil/editar" method="post">
+                <div class="form-group mb-3">
+                    <label for="nome">Nome:</label>
+                    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="senha">Senha:</label>
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha"
+                           data-bs-toggle="tooltip" data-bs-placement="right"
+                           title="A senha deve ser entre 4 e 20 caracteres e não pode conter espaços.">
+                </div>
+                <button type="submit" class="btn btn-primary w-100" style="margin-bottom: 1px">Salvar Alterações</button>
+            </form>
+            <a href="/perfil">
+                <button class="btn btn-light w-100 mt-2">Cancelar</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+</body>
+</html>

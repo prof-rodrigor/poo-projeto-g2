@@ -88,6 +88,12 @@ public class UsuarioService extends AbstractService {
         vo.put("senha", usuario.getSenha());
         return vo;
     }
+    public void atualizarUsuario(Usuario usuario) {
+        Document userDoc = userToVO(usuario);
+        String email = userDoc.getString("email");
+
+        repository.replaceOne(eq("email", email), userDoc);
+    }
 
 }
 
