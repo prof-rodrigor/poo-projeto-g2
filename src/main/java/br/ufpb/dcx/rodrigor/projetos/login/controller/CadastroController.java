@@ -72,9 +72,6 @@ public class CadastroController {
     }
 
 
-
-
-
     public boolean isValidUsername(String username) {
         return username != null && username.length() <= 12 && !username.contains(" ") && !username.matches(".[!@#$%^&()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
     }

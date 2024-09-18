@@ -6,7 +6,10 @@ import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.Document;
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.Optional;
 
 public class PerfilController {
 
@@ -22,7 +25,6 @@ public class PerfilController {
             ctx.attribute("nome", usuario.getUsername());
             ctx.attribute("email", usuario.getEmail());
 
-            // Renderizar o formulário de edição
             ctx.render("perfil/editar_perfil.html");
             logger.info("Página de edição de perfil acessada pelo usuário '{}'", usuario.getUsername());
         } else {
@@ -31,35 +33,43 @@ public class PerfilController {
         }
     }
 
-    public void editarPerfil(Context ctx) {
+    public void editarPerfil(Context ctx){
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
-        Usuario usuario = ctx.sessionAttribute("usuario");
 
-        if (usuario == null) {
-            logger.warn("Tentativa de editar perfil sem estar autenticado.");
-            ctx.redirect("/login");
-            return;
-        }
 
-        // Obtendo os parâmetros do formulário
         String nome = ctx.formParam("nome");
         String password = ctx.formParam("senha");
 
-        // Log para verificar os dados recebidos
+
         logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
 
+        Usuario usuario1 = new Usuario();
+        usuario1.setUsername(nome);
+
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        usuario1.setSenha(hashedPassword);
 
-        // Atualizando os dados do usuário
-        usuario.setUsername(nome);
-        usuario.setSenha(hashedPassword);
 
-        // Atualizando no banco de dados
-        usuarioService.atualizarUsuario(usuario);
+        usuario1.setEmail(ctx.sessionAttribute("userEmail"));
 
-        // Redirecionar para a página de perfil após a atualização
+
+        usuarioService.atualizarUsuario(usuario1);
+
+
         ctx.redirect("/login");
-        logger.info("Perfil atualizado com sucesso: nome={}, email={}", usuario.getUsername(), usuario.getEmail());
-    }
 
+
+    }
+    public boolean isValidUsername(String username) {
+        return username != null && username.length() <= 12 && !username.contains(" ")
+                && !username.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+    }
+    public boolean isValidPassword(String password) {
+        return password != null && !password.trim().isEmpty() && password.length() <= 20 && password.length() >= 4
+                && password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")
+                && password.matches(".*[A-Z].*")
+                && !password.contains(" ");
+    }
 }
+
+

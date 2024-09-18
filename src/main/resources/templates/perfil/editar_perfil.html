@@ -24,18 +24,18 @@
             <h3 class="mb-4">Editar Perfil</h3>
 
             <!-- Mensagem de erro -->
-            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                <span th:text="${errorMessage}"></span>
+            <div th:if="${erro}" class="alert alert-danger" role="alert">
+                <span th:text="${erro}"></span>
             </div>
 
             <form action="/perfil/editar" method="post">
                 <div class="form-group mb-3">
                     <label for="nome">Nome:</label>
-                    <input type="text" class="form-control" id="nome" name="nome" required placeholder="Nome">
+                    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
                 </div>
                 <div class="form-group mb-4">
                     <label for="senha">Senha:</label>
-                    <input type="password" class="form-control" id="senha" name="senha" required placeholder="Senha"
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha"
                            data-bs-toggle="tooltip" data-bs-placement="right"
                            title="A senha deve ser entre 4 e 20 caracteres e não pode conter espaços.">
                 </div>
