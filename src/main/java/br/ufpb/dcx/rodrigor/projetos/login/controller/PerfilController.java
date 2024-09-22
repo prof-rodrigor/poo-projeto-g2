@@ -1,6 +1,7 @@
 package br.ufpb.dcx.rodrigor.projetos.login.controller;
 
 import br.ufpb.dcx.rodrigor.projetos.Keys;
+import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
@@ -36,10 +37,8 @@ public class PerfilController {
     public void editarPerfil(Context ctx){
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
 
-
         String nome = ctx.formParam("nome");
         String password = ctx.formParam("senha");
-
 
         logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
 
@@ -49,14 +48,15 @@ public class PerfilController {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
         usuario1.setSenha(hashedPassword);
 
-
         usuario1.setEmail(ctx.sessionAttribute("userEmail"));
 
+        try {
+            usuarioService.atualizarUsuario(usuario1);
+            ctx.redirect("/login");
+        } catch (NullPointerException e ){
+            ctx.redirect("/login");
+        }
 
-        usuarioService.atualizarUsuario(usuario1);
-
-
-        ctx.redirect("/login");
 
 
     }

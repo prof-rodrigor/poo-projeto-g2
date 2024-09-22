@@ -31,7 +31,7 @@ public class UsuarioService extends AbstractService {
 
     // TODO
     public void cadastrarNovoUsuario(Usuario usuario) throws InvalidUsernameException, InvalidEmailException {
-        Document doc = userToVO(usuario);
+        Document doc = usuarioToDocument(usuario);
 
         if (getUsuario(usuario.getUsername()) != null) {
             throw new InvalidUsernameException("Esse usuário já existe");
@@ -44,6 +44,13 @@ public class UsuarioService extends AbstractService {
         repository.insertOne(doc);
     }
 
+    public void atualizarUsuario(Usuario usuario) {
+        Document userDoc = usuarioToDocument(usuario);
+        String email = userDoc.getString("email");
+
+        repository.replaceOne(eq("email", email), userDoc);
+    }
+
     public void removerUsuario(String titulo){
         repository.deleteOne(eq("titulo", new ObjectId(titulo)));
     }
@@ -51,7 +58,7 @@ public class UsuarioService extends AbstractService {
     public List<Usuario> listarUsuarios(){
         List<Usuario> usuarios = new LinkedList<>();
         for (Document doc : repository.find()){
-            usuarios.add(voToUser(doc));
+            usuarios.add(documentToUsuario(doc));
         }
         return usuarios;
     }
@@ -62,7 +69,7 @@ public class UsuarioService extends AbstractService {
         if (doc == null) {
             return null;
         }
-        return voToUser(doc);
+        return documentToUsuario(doc);
     }
 
     public Usuario getUsuarioByEmail(String email) {
@@ -71,29 +78,32 @@ public class UsuarioService extends AbstractService {
         if (doc == null) {
             return null;
         }
-        return voToUser(doc);
+        return documentToUsuario(doc);
     }
 
-    public Usuario voToUser(Document doc) {
+    public Usuario documentToUsuario(Document doc) {
         Usuario usuario = new Usuario();
         usuario.setUsername(doc.getString("username"));
         usuario.setEmail(doc.getString("email"));
         usuario.setSenha(doc.getString("senha"));
         return usuario;
     }
-    public Document userToVO(Usuario usuario){
+    public Document usuarioToDocument(Usuario usuario){
         Document vo = new Document();
         vo.put("username", usuario.getUsername());
         vo.put("email", usuario.getEmail());
         vo.put("senha", usuario.getSenha());
         return vo;
     }
-    public void atualizarUsuario(Usuario usuario) {
-        Document userDoc = userToVO(usuario);
-        String email = userDoc.getString("email");
 
-        repository.replaceOne(eq("email", email), userDoc);
+    public void verificaUsuario(Usuario usuario){
+
     }
+
+    public void verificaEmail(Usuario usuario){
+
+    }
+
 
 }
 
