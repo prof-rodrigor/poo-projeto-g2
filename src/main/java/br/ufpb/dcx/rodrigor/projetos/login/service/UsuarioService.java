@@ -47,9 +47,10 @@ public class UsuarioService extends AbstractService {
     public void atualizarUsuario(Usuario usuario) {
         Document userDoc = usuarioToDocument(usuario);
         String email = userDoc.getString("email");
-
         repository.replaceOne(eq("email", email), userDoc);
     }
+
+
 
     public void removerUsuario(String titulo){
         repository.deleteOne(eq("titulo", new ObjectId(titulo)));
@@ -81,6 +82,10 @@ public class UsuarioService extends AbstractService {
         return documentToUsuario(doc);
     }
 
+    public void recuperarSenha(){
+
+    }
+
     public Usuario documentToUsuario(Document doc) {
         Usuario usuario = new Usuario();
         usuario.setUsername(doc.getString("username"));
@@ -95,6 +100,8 @@ public class UsuarioService extends AbstractService {
         vo.put("senha", usuario.getSenha());
         return vo;
     }
+
+
 
     public void verificaUsuario(Usuario usuario){
 

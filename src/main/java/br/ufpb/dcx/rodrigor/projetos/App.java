@@ -1,15 +1,12 @@
 package br.ufpb.dcx.rodrigor.projetos;
 
 import br.ufpb.dcx.rodrigor.projetos.db.MongoDBConnector;
-import br.ufpb.dcx.rodrigor.projetos.login.controller.CadastroController;
-import br.ufpb.dcx.rodrigor.projetos.login.controller.LoginController;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.*;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import br.ufpb.dcx.rodrigor.projetos.participante.controllers.ParticipanteController;
 import br.ufpb.dcx.rodrigor.projetos.participante.services.ParticipanteService;
 import br.ufpb.dcx.rodrigor.projetos.projeto.controllers.ProjetoController;
 import br.ufpb.dcx.rodrigor.projetos.projeto.services.ProjetoService;
-import br.ufpb.dcx.rodrigor.projetos.login.controller.RecuperacaoSenhaController;
-import br.ufpb.dcx.rodrigor.projetos.login.controller.PerfilController;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.staticfiles.Location;
@@ -143,10 +140,20 @@ public class App {
     }
 
     private void configurarRotas(Javalin app) {
+        EsqueciSenhaController esqueciSenhaController = new EsqueciSenhaController();
+        app.get("/login/esqueci-senha", esqueciSenhaController::mostrarPaginaEsqueciSenha);
+        app.post("/login/esqueci-senha", esqueciSenhaController::enviaCodigoRecuperacaoEmail);
+        app.post("/login/conta-recuperada", esqueciSenhaController::alterarSenhaComCodigoRecuperacao);
+
+
+        RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
+        app.get("/recuperarSenha", recuperarSenhaController::exibirFormularioRecuperacaoSenha);
+        app.post("/recuperarSenha", recuperarSenhaController::enviarEmailRecuperacaoSenha);
+
 
         PerfilController perfilController = new PerfilController();
-        app.get("/perfil/editar", ctx -> perfilController.mostrarPaginaEditarPerfil(ctx));
-        app.post("/perfil/editar", ctx -> perfilController.editarPerfil(ctx));
+        app.get("/perfil/editar", perfilController::mostrarPaginaEditarPerfil);
+        app.post("/perfil/editar", perfilController::editarPerfil);
 
         CadastroController cadastroController = new CadastroController();
         app.get("/cadastro",cadastroController::rederizarCasdastro);
@@ -159,11 +166,6 @@ public class App {
         app.post("/login", loginController::processarLogin);
         app.get("/logout", loginController::logout);
         app.post("/v1/autenticar",loginController::autenticar);
-
-
-        RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
-        app.get("/recuperarSenha", recuperarSenhaController::exibirFormularioRecuperacaoSenha);
-        app.post("/recuperarSenha", recuperarSenhaController::enviarEmailRecuperacaoSenha);
 
 
         app.get("/area-interna", ctx -> {
