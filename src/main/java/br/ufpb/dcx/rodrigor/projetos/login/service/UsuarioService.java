@@ -95,6 +95,8 @@ public class UsuarioService extends AbstractService {
         repository.replaceOne(eq("email", email), userDoc);
     }
 
+
+
 }
 
 

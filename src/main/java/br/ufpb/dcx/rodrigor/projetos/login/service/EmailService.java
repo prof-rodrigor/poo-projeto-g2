@@ -1,39 +1,33 @@
 package br.ufpb.dcx.rodrigor.projetos.login.service;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 
-import java.util.Properties;
+import br.ufpb.dcx.rodrigor.projetos.login.controller.PerfilController;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EmailService {
+    private static final Logger logger = LogManager.getLogger(EmailService.class);
+    private final String smtpHost = "smtp.gmail.com";
+    private final String username = "authpoogrupog2@gmail.com";
+    private final String password = "lnij nibn xkrm xbbu"; // Senha de aplicativo gerada
+    private final int smtpPort = 587;
 
-    public void enviarEmail(String destinatario, String assunto, String conteudo) throws MessagingException {
-        // Configuração das propriedades do servidor SMTP
-        Properties prop = new Properties();
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true"); // Ativar se o servidor suportar TLS
+    public void enviarEmail(String toEmail, String subject, String message) throws EmailException {
+        // Configuração do email
+        Email email = new SimpleEmail();
+        email.setHostName(smtpHost);
+        email.setSmtpPort(smtpPort);
+        email.setAuthentication(username, password);
+        email.setStartTLSEnabled(true); // Habilitar TLS para segurança
+        email.setFrom(username); // Remetente
+        email.setSubject(subject); // Assunto do e-mail
+        email.setMsg(message); // Mensagem do e-mail
+        email.addTo(toEmail); // Destinatário
 
-        // Autenticação do e-mail remetente
-        Session session = Session.getInstance(prop, new jakarta.mail.Authenticator() {
-            protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new jakarta.mail.PasswordAuthentication("authpoogrupog2@gmail.com", "lnij nibn xkrm xbbu");
-            }
-        });
-
-        // Criação da mensagem de e-mail
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("seuemail@seuservidor.com"));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
-        message.setSubject(assunto);
-        message.setText(conteudo);
-
-        // Enviar a mensagem
-        Transport.send(message);
+        // Enviar o e-mail
+        email.send();
+        logger.info("E-mail enviado com sucesso!");
     }
 }
-
