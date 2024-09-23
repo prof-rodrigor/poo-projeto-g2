@@ -44,3 +44,5 @@ public class RecuperacaoSenhaController {
         // Aqui estaria a lógica real para envio de e-mails
     }
 }
+
+//https://mailtrap.io/blog/java-send-email-gmail/
