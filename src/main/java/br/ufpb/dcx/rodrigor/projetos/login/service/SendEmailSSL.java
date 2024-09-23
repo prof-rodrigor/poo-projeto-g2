@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class SendEmailSSL {
 
-    final String username = "poogerpro@gmail.com";
+    final String username = "@gmail.com";
     final String password = "hvdl vsvn uqpo wycv";
     Properties prop;
 
