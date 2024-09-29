@@ -12,8 +12,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.mail.MessagingException;
 import java.util.Random;
 
-import static org.mindrot.jbcrypt.BCrypt.gensalt;
-
 public class EsqueciSenhaController {
 
     private static final Logger logger = LogManager.getLogger(PerfilController.class);
