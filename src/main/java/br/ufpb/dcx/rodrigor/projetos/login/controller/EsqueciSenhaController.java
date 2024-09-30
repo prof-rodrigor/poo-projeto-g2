@@ -36,8 +36,8 @@ public class EsqueciSenhaController {
                     SendEmailSSL sendEmailSSL = new SendEmailSSL();
                     Random rand = new Random();
                     String code = String.valueOf(100000 + rand.nextInt(900000));
-                    ctx.attribute("recoveryCode",code);
-                    ctx.attribute("email",email);
+                    ctx.sessionAttribute("recoveryCode", code);
+                    ctx.sessionAttribute("email", email);
                     String msg = "Código de recuperação: "+ code;
                     sendEmailSSL.sendEmail(email, " POOGERPRO - Recuperação de senha", msg);
                     ctx.render("/conta/esqueci-a-senha-codigo.html");
@@ -52,11 +52,13 @@ public class EsqueciSenhaController {
 
     public void alterarSenhaComCodigoRecuperacao(Context ctx){
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
-        String recoveryCode = ctx.attribute("recoveryCode");
+        String recoveryCode = ctx.sessionAttribute("recoveryCode");
         String codigo = ctx.formParam("codigo");
         if (codigo != null && codigo.equals(recoveryCode)){
             String senha = ctx.formParam("novasenha");
-            String email = ctx.attribute("email") ;
+            String email = ctx.sessionAttribute("email") ;
+            logger.info("******Email: " + email);
+            logger.info("******Nova senha: " + senha);
             if (isValidPassword(senha)){
                 Usuario usuario = usuarioService.getUsuarioByEmail(email);
                 String hashedPassword = BCrypt.hashpw(senha, BCrypt.gensalt(12));
@@ -65,17 +67,27 @@ public class EsqueciSenhaController {
                 logger.info("Usuario"+ usuario.getUsername()+" atualizado com sucesso");
                 ctx.redirect("/");
             }else{
-                //TODO Exibir erro de nova senha inválida
+                logger.error("Invalid Password doidao");
             }
         }else{
             // TODO Exibir erro de código incorreto
+            logger.info(codigo);
+            logger.error("Codigo nulo ou diferente do enviado");
         }
     }
+
+
+
+
     public boolean isValidPassword(String password) {
-        return password != null && !password.trim().isEmpty() && password.length() <= 20 && password.length() >= 4
-                && password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")
-                && password.matches(".*[A-Z].*")
+        return password != null && !password.trim().isEmpty()
+                && password.length() <= 20 && password.length() >= 4
                 && !password.contains(" ");
+
+//        return password != null && !password.trim().isEmpty() && password.length() <= 20 && password.length() >= 4
+//                && password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")
+//                && password.matches(".*[A-Z].*")
+//                && !password.contains(" ");
     }
     public boolean isValidEmail(String email) {
         return email != null && email.contains("@") && email.indexOf("@") < email.lastIndexOf(".") && email.length() <= 64;
@@ -83,6 +95,3 @@ public class EsqueciSenhaController {
 
 }
 
-// Primeiro estágio, envia código para email, salva o código encriptado no dom]
-// Redireciona para a proxima pagina
-// Usuario insere código e a nova senha

@@ -145,12 +145,6 @@ public class App {
         app.post("/login/esqueci-senha", esqueciSenhaController::enviaCodigoRecuperacaoEmail);
         app.post("/login/conta-recuperada", esqueciSenhaController::alterarSenhaComCodigoRecuperacao);
 
-
-        RecuperacaoSenhaController recuperarSenhaController = new RecuperacaoSenhaController();
-        app.get("/recuperarSenha", recuperarSenhaController::exibirFormularioRecuperacaoSenha);
-        app.post("/recuperarSenha", recuperarSenhaController::enviarEmailRecuperacaoSenha);
-
-
         PerfilController perfilController = new PerfilController();
         app.get("/perfil/editar", perfilController::mostrarPaginaEditarPerfil);
         app.post("/perfil/editar", perfilController::editarPerfil);
