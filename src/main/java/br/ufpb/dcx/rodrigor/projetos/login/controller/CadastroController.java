@@ -5,11 +5,14 @@ import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidEmailException;
 import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidPasswordException;
 import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
+import br.ufpb.dcx.rodrigor.projetos.login.service.SendEmailSSL;
 import br.ufpb.dcx.rodrigor.projetos.login.service.UsuarioService;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
+
+import javax.mail.MessagingException;
 
 public class CadastroController {
 
@@ -20,6 +23,7 @@ public class CadastroController {
 
     public void cadastrarUsuario(Context ctx) {
         UsuarioService service = ctx.appData(Keys.USUARIO_SERVICE.key());
+
         String username = ctx.formParam("nome");
         String email = ctx.formParam("email");
         String password = ctx.formParam("senha");
@@ -32,7 +36,11 @@ public class CadastroController {
 
         if (isValidUsername(username) && isValidEmail(email) && isValidPassword(password)) {
             try {
+                SendEmailSSL sendEmailSSL = new SendEmailSSL();
                 service.cadastrarNovoUsuario(usuario);
+                String subject = "GERPRO - Bem vindo ao GERPRO";
+                String content = username+",sua conta foi criada com sucesso, agora você faz parte da GERPRO!";
+                sendEmailSSL.sendEmail(usuario.getEmail(),subject,content);
                 ctx.redirect("/login");
             } catch (InvalidEmailException iae) {
                 ctx.attribute("errorMessage", "Este email já foi cadastrado.");
@@ -40,6 +48,8 @@ public class CadastroController {
             } catch (InvalidUsernameException iue) {
                 ctx.attribute("errorMessage", "Este nome de usuário já existe ou é inválido.");
                 ctx.render("registro/registro.html");
+            }catch (MessagingException me){
+                //TODO
             }
         } else {
             if (!isValidUsername(username)) {
@@ -67,6 +77,7 @@ public class CadastroController {
                     ctx.attribute("errorMessage", "Senha inválida. Sua senha não deve conter espaços.");
                 }
             }
+
             ctx.render("registro/registro.html");
         }
     }
