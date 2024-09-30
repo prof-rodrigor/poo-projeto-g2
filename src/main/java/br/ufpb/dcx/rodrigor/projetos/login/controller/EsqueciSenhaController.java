@@ -44,6 +44,8 @@ public class EsqueciSenhaController {
                 }catch (MessagingException me){
                     // TODO Implementar caso email não exista/incorreto
                 }
+            }else {
+                //TODO Mostrar o usuário que esse email não está cadastrado
             }
         }else {
             // TODO Implementar caso email não seja válido

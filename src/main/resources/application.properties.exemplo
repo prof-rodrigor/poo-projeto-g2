@@ -1,0 +1,12 @@
+# sua connection string:
+mongodb.connectionString=mongodb+srv://<username>:<password>@cluster0.mkj8d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+porta.servidor=8000
+
+# informacoes de conexao com o email
+mail.username=email@gmail.com
+mail.password=app password
+mail.smtp.host =smtp.gmail.com
+mail.smtp.port =465
+mail.smtp.auth =true
+mail.smtp.socketFactory.port =465
+mail.smtp.socketFactory.class =javax.net.ssl.SSLSocketFactory
