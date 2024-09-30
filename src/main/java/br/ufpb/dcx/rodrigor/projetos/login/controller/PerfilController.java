@@ -34,13 +34,45 @@ public class PerfilController {
         }
     }
 
-    public void editarPerfil(Context ctx){
+    public void editarPerfil(Context ctx) {
         UsuarioService usuarioService = ctx.appData(Keys.USUARIO_SERVICE.key());
 
         String nome = ctx.formParam("nome");
         String password = ctx.formParam("senha");
 
         logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
+
+        if (!isValidUsername(nome)) {
+            if (nome.isEmpty() || nome.equals(null)) {
+                ctx.attribute("errorMessage", "Nome de usuario não pode ser nulo");
+            } else if (nome.contains(" ")) {
+                ctx.attribute("errorMessage", "Nome de usuario não pode conter espaços");//OK
+            } else if (nome.matches(".[!@#$%^&()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+                ctx.attribute("errorMessage", "Nome de usuario não pode conter caracteres especiais"); //OK
+            } else {
+                ctx.attribute("errorMessage", "Nome de usuário inválido.");
+            }
+            ctx.render("perfil/editar_perfil.html");
+        }
+
+
+        if (!isValidPassword(password)) {
+            if (password == null || password.isEmpty()) {
+                ctx.attribute("errorMessage", "Senha inválida. Sua senha não pode ser vazia.");
+            } else if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+                ctx.attribute("errorMessage", "Sua senha deve conter algum caractere especial: !, @, #, $, %, entre outros.");
+            } else if (!password.matches(".*[A-Z].*")) {
+                ctx.attribute("errorMessage", "Sua senha deve conter pelo menos uma letra MAIÚSCULA.");
+            } else if (password.length() > 20 || password.length() < 4) {
+                ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres.");
+            } else if (password.contains(" ")) {
+                ctx.attribute("errorMessage", "Senha inválida. Não deve conter espaços.");
+            }
+            ctx.render("perfil/editar_perfil.html");
+
+
+
+        }
 
         Usuario usuario1 = new Usuario();
         usuario1.setUsername(nome);
