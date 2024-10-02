@@ -9,11 +9,25 @@
 </head>
 <body>
 
-<form action="/login/esqueci-senha" method="post">
-    <label for="email">Digite seu email:</label>
-    <input type="email" id="email" name="email" required>
-    <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">Enviar email de recuperação</h2>
+
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <form action="/recuperarSenha" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Confirme o seu email</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Seu email">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Enviar email</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div id="message"></div>
 
