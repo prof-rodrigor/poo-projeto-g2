@@ -76,3 +76,30 @@ public class LoginController {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//if ( usuarioService.getUsuario(login) != null){
+//Usuario usuario = usuarioService.getUsuario(login);
+//            if(BCrypt.checkpw(senha,usuario.getSenha())){
+//Map<String, String> userResponse = new HashMap<>();
+//                userResponse.put("username", usuario.getUsername());
+//        userResponse.put("email", usuario.getEmail());
+//        userResponse.put("cargo", "Admin");
+//
+//                ctx.json(userResponse);
+//                ctx.status(200);
+//            }else {
+//                    ctx.status(401).json(Map.of("error", "Usuário ou senha incorretos"));
+//        }
+//        }
