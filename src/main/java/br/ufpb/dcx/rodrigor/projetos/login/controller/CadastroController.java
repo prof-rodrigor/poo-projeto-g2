@@ -2,7 +2,6 @@ package br.ufpb.dcx.rodrigor.projetos.login.controller;
 
 import br.ufpb.dcx.rodrigor.projetos.Keys;
 import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidEmailException;
-import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidPasswordException;
 import br.ufpb.dcx.rodrigor.projetos.login.exceptions.InvalidUsernameException;
 import br.ufpb.dcx.rodrigor.projetos.login.model.Usuario;
 import br.ufpb.dcx.rodrigor.projetos.login.service.SendEmailSSL;

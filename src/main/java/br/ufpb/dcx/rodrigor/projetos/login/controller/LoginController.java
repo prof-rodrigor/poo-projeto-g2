@@ -30,14 +30,21 @@ public class LoginController {
         String login = ctx.formParam("login");
         String senha = ctx.formParam("senha");
         Usuario usuario = usuarioService.getUsuarioByEmail(login);
-        if(usuario != null && BCrypt.checkpw(senha,usuario.getSenha())){
-            ctx.sessionAttribute("usuario", usuario);
-            logger.info("Usuário '{}' autenticado com sucesso.", login);
-            ctx.redirect("/area-interna");
-        }else {
-            logger.warn("Tentativa de login falhou para o usuário: {}", login);
-            ctx.redirect("/login");
+        if(usuario == null){
+            ctx.attribute("errorMessage","Email não cadastrado");
+            logger.warn("Tentativa de login falhou para o e-mail: {}. E-mail não cadastrado.", login);
+            ctx.render("/login");
+            return;
         }
+        if(!BCrypt.checkpw(senha,usuario.getSenha())){
+            ctx.attribute("errorMessage", "Senha inválida");
+            logger.warn("Tentativa de login falhou para o e-mail: {}. Senha incorreta", login);
+            ctx.render("/login");
+            return;
+        }
+        ctx.sessionAttribute("usuario",usuario);
+        logger.info("Usuário '{}' autenticado com sucesso.", login);
+        ctx.redirect("/area-interna");
     }
 
     public void logout(Context ctx) {
@@ -68,10 +75,6 @@ public class LoginController {
 
     }
 }
-
-
-
-
 
 
 
