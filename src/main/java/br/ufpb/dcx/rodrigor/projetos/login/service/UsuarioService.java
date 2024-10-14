@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,6 +81,14 @@ public class UsuarioService extends AbstractService {
         }
         return documentToUsuario(doc);
     }
+    public String getSenhaUsuario(String email) {
+        Bson filter = eq("email", email);
+        Document doc = repository.find(filter).first();
+        if (doc == null) {
+            return null;
+        }
+        return doc.getString("senha");
+    }
 
     public void recuperarSenha(){
 
@@ -100,7 +109,9 @@ public class UsuarioService extends AbstractService {
         return vo;
     }
 
-
+    public boolean verificaSenha(String senha, String senhaEncriptada){
+        return BCrypt.checkpw(senha,senhaEncriptada);
+    }
 
     public void verificaUsuario(Usuario usuario){
 

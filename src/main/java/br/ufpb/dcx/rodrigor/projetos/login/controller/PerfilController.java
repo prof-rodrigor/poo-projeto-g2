@@ -39,9 +39,9 @@ public class PerfilController {
 
         String nome = ctx.formParam("nome");
         String password = ctx.formParam("senha");
-
-        logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
-
+        Usuario usuario = usuarioService.getUsuario(nome);
+       
+        
         if (!isValidUsername(nome)) {
             if (nome.isEmpty() || nome.equals(null)) {
                 ctx.attribute("errorMessage", "Nome de usuario não pode ser nulo");
@@ -54,8 +54,6 @@ public class PerfilController {
             }
             ctx.render("perfil/editar_perfil.html");
         }
-
-
         if (!isValidPassword(password)) {
             if (password == null || password.isEmpty()) {
                 ctx.attribute("errorMessage", "Senha inválida. Sua senha não pode ser vazia.");
@@ -67,12 +65,13 @@ public class PerfilController {
                 ctx.attribute("errorMessage", "Senha inválida. Deve ter entre 4 e 20 caracteres.");
             } else if (password.contains(" ")) {
                 ctx.attribute("errorMessage", "Senha inválida. Não deve conter espaços.");
-            }
+            } else if (usuarioService.verificaSenha(password, usuarioService.getSenhaUsuario(usuario.getEmail()))) {
+                ctx.attribute("errorMessage", "Sua senha não pode ser a igual a atual");
+           }
+
             ctx.render("perfil/editar_perfil.html");
-
-
-
         }
+        logger.info("Dados recebidos - Nome: {}, Senha: {}", nome, password);
 
         Usuario usuario1 = new Usuario();
         usuario1.setUsername(nome);
